@@ -302,11 +302,11 @@ class twampStatistics():
 
 class twampySessionSender(udpSession):
 
-    def __init__(self, args):
+    def __init__(self, args, remotePort=20001):
         # Session Sender / Session Reflector:
         #   get Address, UDP port, IP version from near_end/far_end attributes
         sip, spt, sipv = parse_addr(args.near_end, 20000)
-        rip, rpt, ripv = parse_addr(args.far_end,  20001)
+        rip, rpt, ripv = parse_addr(args.far_end,  remotePort)
 
         ipversion = 6 if (sipv == 6) or (ripv == 6) else 4
         udpSession.__init__(self, sip, spt, args.tos, args.ttl, args.do_not_fragment, ipversion)
@@ -514,6 +514,7 @@ class twampyControlClient:
         if rval != 0:
             log.critical("ERROR CODE %d in <<Session Accept>>", rval)
             return False
+        self.remote_port = struct.unpack('!H',data[2:4])[0]
         return True
 
     def startSessions(self):
@@ -569,7 +570,7 @@ def twamp_controller(args):
     if client.reqSession(s_port=spt, r_port=rpt):
         client.startSessions()
 
-        sender = twampySessionSender(args)
+        sender = twampySessionSender(args, client.remote_port)
         sender.setDaemon(True)
         sender.setName("twl_responder")
         sender.start()

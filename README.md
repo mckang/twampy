@@ -1,7 +1,7 @@
 # Python tools for TWAMP and TWAMP light
 Twampy is a Python implementation of the Two-Way Active Measurement
 Protocol (TWAMP and TWAMP light) as defined in RFC5357. This tool
-was developed to validate the Nokia SR OS TWAMP implementation.
+is customized to validate the Perfsonar TWAMP implementation.
 
 ## Supported features
 * unauthenticated mode
